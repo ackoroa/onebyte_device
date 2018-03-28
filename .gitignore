@@ -1,0 +1,10 @@
+*.o
+*.o.*
+*.ko
+*.ko.*
+*.mod.*
+*.symvers
+*.order
+.tmp*
+.cache*
+
