@@ -36,7 +36,8 @@ int onebyte_release(struct inode *inode, struct file *filep) {
 }
 
 ssize_t onebyte_read(struct file *filep, char *buf, size_tcount, loff_t *f_pos) {
-  /*please complete the function on your own*/
+  printk(KERN_ALERT "Reading from onebyte: %s\n", *onebyte_data);
+  *buf = *onebyte_data;
 }
 
 ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos) {
@@ -77,7 +78,7 @@ static void onebyte_exit(void) {
     kfree(onebyte_data);
     onebyte_data = NULL;
   }
-  
+
   // unregister the device
   unregister_chrdev(MAJOR_NUMBER, "onebyte");
   printk(KERN_ALERT "Onebyte device module is unloaded\n");
