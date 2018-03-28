@@ -38,12 +38,21 @@ int onebyte_release(struct inode *inode, struct file *filep) {
 
 ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos) {
   printk(KERN_ALERT "Reading from onebyte: %c\n", *onebyte_data);
+  // TODO make cat work
   *buf = *onebyte_data;
   return 1;
 }
 
 ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos) {
-  if (count-1 > 1) printk(KERN_ALERT "%.*s is longer than one byte", count-1, buf); 
+  if (count <= 1) {
+    printk(KERN_ALERT "Empty input. Exiting...\n");
+    return count;
+  }
+
+  // TODO print warning to console
+  if (count-1 > 1) {
+    printk(KERN_ALERT "%.*s is longer than one byte", (int) count-1, buf); 
+  }
 
   printk(KERN_ALERT "Writing to onebyte: %c\n", *buf);
   *onebyte_data = buf[0];
