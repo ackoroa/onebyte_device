@@ -6,6 +6,7 @@
 #include <linux/types.h>
 #include <linux/fs.h>
 #include <linux/proc_fs.h>
+#include <linux/sched.h>
 #include <asm/uaccess.h>
 
 #define MAJOR_NUMBER 61
