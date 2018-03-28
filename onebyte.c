@@ -36,7 +36,7 @@ int onebyte_release(struct inode *inode, struct file *filep) {
 }
 
 ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos) {
-  printk(KERN_ALERT "Reading from onebyte: %s\n", *onebyte_data);
+  printk(KERN_ALERT "Reading from onebyte: %s\n", onebyte_data);
   *buf = *onebyte_data;
 }
 
