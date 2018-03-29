@@ -60,8 +60,8 @@ ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t 
   onebyte_size = 1;
 
   if (count > 1) {
-    printk(KERN_EMERG "write error: No space left on device.\n");
     printk(KERN_ALERT "%.*s is longer than one byte", (int) count, buf); 
+    return -ENOSPC;
   }
 
   return count;
