@@ -50,8 +50,8 @@ ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 }
 
 ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos) {
-  if (count <= 1) {
-    printk(KERN_CRIT "write error: Empty Input.\n");
+  if (count <= 0) {
+    printk(KERN_EMERG "write error: Empty Input.\n");
     return count;
   }
 
@@ -59,9 +59,9 @@ ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t 
   *onebyte_data = buf[0];
   onebyte_size = 1;
 
-  if (count-1 > 1) {
-    printk(KERN_CRIT "write error: No space left on device.");
-    printk(KERN_ALERT "%.*s is longer than one byte", (int) count-1, buf); 
+  if (count > 1) {
+    printk(KERN_EMERG "write error: No space left on device.\n");
+    printk(KERN_ALERT "%.*s is longer than one byte", (int) count, buf); 
   }
 
   return count;
