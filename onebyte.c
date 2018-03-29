@@ -27,6 +27,7 @@ struct file_operations onebyte_fops = {
 };
 
 char* onebyte_data = NULL;
+int onebyte_size = 0;
 
 int onebyte_open(struct inode *inode, struct file *filep) {
   return 0; // always successful
@@ -38,24 +39,31 @@ int onebyte_release(struct inode *inode, struct file *filep) {
 
 ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos) {
   printk(KERN_ALERT "Reading from onebyte: %c\n", *onebyte_data);
-  // TODO make cat work
-  *buf = *onebyte_data;
-  return 1;
+  
+  if (onebyte_size) {
+    *buf = *onebyte_data;
+    onebyte_size = 0;
+    return 1;
+  }
+
+  return 0;
 }
 
 ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos) {
   if (count <= 1) {
-    printk(KERN_ALERT "Empty input. Exiting...\n");
+    printk(KERN_CRITICAL "write error: Empty Input.\n");
     return count;
-  }
-
-  // TODO print warning to console
-  if (count-1 > 1) {
-    printk(KERN_ALERT "%.*s is longer than one byte", (int) count-1, buf); 
   }
 
   printk(KERN_ALERT "Writing to onebyte: %c\n", *buf);
   *onebyte_data = buf[0];
+  onebyte_size = 1;
+
+  if (count-1 > 1) {
+    printk(KERN_CRITICAL "write error: No space left on device.");
+    printk(KERN_ALERT "%.*s is longer than one byte", (int) count-1, buf); 
+  }
+
   return count;
 }
 
@@ -82,6 +90,7 @@ static int onebyte_init(void) {
 
   // initialize the value to be X
   *onebyte_data = 'X';
+  onebyte_size = 1;
   printk(KERN_ALERT "This is a onebyte device module\n");
   return 0;
 }
